@@ -24,6 +24,7 @@ public class Client {
     private String identificacion;
     private String names;
     private String surnames;
+    private String genre;
     private Date birthdate;
     private List<Address> addresses;
     private String email;
