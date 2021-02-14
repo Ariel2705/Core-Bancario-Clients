@@ -12,6 +12,7 @@ import ec.edu.espe.corebancario.clients.exception.UpdateException;
 import ec.edu.espe.corebancario.clients.model.Client;
 import ec.edu.espe.corebancario.clients.repository.ClientRepository;
 import java.math.BigDecimal;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -56,10 +57,27 @@ public class ClientService {
         }
     }
     
-    public Client findClients(Client client) throws DocumentNotFoundException {
+    public List<Client> findClientsByNamesAndSurnames(Client client) throws DocumentNotFoundException {
          try {
-            Client clientFind = this.clientRepo.findByNamesAndSurnamesAndTotalBalanceAccountIn(client);
-            return clientFind;
+            List<Client> clientFind = this.clientRepo.findByNamesAndSurnames(client.getNames(),client.getSurnames());
+            if(clientFind != null){
+              return clientFind;  
+            }else{
+             throw new DocumentNotFoundException("No se encontro el cliente.");
+         }            
+        } catch (Exception e) {
+            throw new DocumentNotFoundException("No se encontro el cliente.");
+        }
+    }
+    
+    public List<Client> findClientsByTotalBalanceAccount(Integer from, Integer to) throws DocumentNotFoundException {
+         try {
+            List<Client> clientFind = this.clientRepo.findByTotalBalanceAccountBetween(from,to);
+            if(clientFind != null){
+              return clientFind;  
+            }else{
+             throw new DocumentNotFoundException("No se encontro el cliente.");
+         }            
         } catch (Exception e) {
             throw new DocumentNotFoundException("No se encontro el cliente.");
         }

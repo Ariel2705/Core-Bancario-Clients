@@ -5,11 +5,14 @@
  */
 package ec.edu.espe.corebancario.clients.repository;
 import ec.edu.espe.corebancario.clients.model.Client;
+import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface ClientRepository extends MongoRepository<Client, String> {
        
     Client findByIdentification(String identification);
-    Client findByNamesAndSurnamesAndTotalBalanceAccountIn(Client client);
+    List<Client> findByNamesAndSurnames(String names,String surNames);
+    List<Client> findByTotalBalanceAccountBetween(Integer from, Integer to);  
 }
