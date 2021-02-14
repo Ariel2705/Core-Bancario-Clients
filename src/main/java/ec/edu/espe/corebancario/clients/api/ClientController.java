@@ -6,6 +6,7 @@
 package ec.edu.espe.corebancario.clients.api;
 
 import ec.edu.espe.corebancario.clients.api.dto.UpdateClientRQ;
+import ec.edu.espe.corebancario.clients.api.dto.TotalBalanceAccountRQ;
 import ec.edu.espe.corebancario.clients.exception.DocumentNotFoundException;
 import ec.edu.espe.corebancario.clients.exception.InsertException;
 import ec.edu.espe.corebancario.clients.exception.UpdateException;
@@ -27,22 +28,31 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/corebancario/client")
 @Slf4j
 public class ClientController {
-    
+
     private final ClientService service;
 
     public ClientController(ClientService service) {
         this.service = service;
     }
-    
-    @GetMapping("/findClient")
-    public ResponseEntity findClient(@RequestBody Client client) {
+
+    @GetMapping("/findClientByNamesAndSurnames")
+    public ResponseEntity findClientByNamesAndSurnames(@RequestBody Client client) {
         try {
-            return ResponseEntity.ok(this.service.findClients(client));
+            return ResponseEntity.ok(this.service.findClientsByNamesAndSurnames(client));
         } catch (DocumentNotFoundException ex) {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
+    @GetMapping("/findClientByTotalBalanceAccount")
+    public ResponseEntity findClientByTotalBalanceAccount(@RequestBody TotalBalanceAccountRQ balance) {
+        try {
+            return ResponseEntity.ok(this.service.findClientsByTotalBalanceAccount(balance.getFrom(), balance.getTo()));
+        } catch (DocumentNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping("/create")
     public ResponseEntity create(@RequestBody Client client) {
         try {
@@ -50,17 +60,17 @@ public class ClientController {
             return ResponseEntity.ok().build();
         } catch (InsertException ex) {
             return ResponseEntity.badRequest().build();
-        } 
+        }
     }
-    
+
     @PutMapping("/update")
-    public ResponseEntity update(@RequestBody UpdateClientRQ updateClient){
+    public ResponseEntity update(@RequestBody UpdateClientRQ updateClient) {
         try {
             this.service.updateClient(updateClient);
             return ResponseEntity.ok().build();
         } catch (UpdateException ex) {
             return ResponseEntity.badRequest().build();
-        } 
+        }
     }
-    
+
 }
