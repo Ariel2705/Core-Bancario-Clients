@@ -5,12 +5,11 @@
  */
 package ec.edu.espe.corebancario.clients.repository;
 import ec.edu.espe.corebancario.clients.model.Client;
-import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface ClientRepository extends MongoRepository<Client, String> {
        
     Client findByIdentification(String identification);
-    Client findByClientIn(Client client);
+    Client findByNamesAndSurnamesAndTotalBalanceAccountIn(Client client);
 }

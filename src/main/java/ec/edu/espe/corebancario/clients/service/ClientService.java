@@ -5,6 +5,8 @@
  */
 package ec.edu.espe.corebancario.clients.service;
 
+import ec.edu.espe.corebancario.clients.api.dto.UpdateClientRQ;
+import ec.edu.espe.corebancario.clients.exception.DocumentNotFoundException;
 import ec.edu.espe.corebancario.clients.exception.InsertException;
 import ec.edu.espe.corebancario.clients.exception.UpdateException;
 import ec.edu.espe.corebancario.clients.model.Client;
@@ -32,9 +34,9 @@ public class ClientService {
         }
     }
 
-    public void updateClient(Client client) throws UpdateException {
+    public void updateClient(UpdateClientRQ client) throws UpdateException {
         try {
-            Client clientUpdate = this.clientRepo.findByIdentification(client.getIdentificacion());
+            Client clientUpdate = this.clientRepo.findByIdentification(client.getIdentification());
             if(clientUpdate != null) {
                 clientUpdate.setNames((client.getNames() != null) ? client.getNames() : clientUpdate.getNames());
                 clientUpdate.setSurnames((client.getSurnames() != null) ? client.getSurnames() : clientUpdate.getSurnames());
@@ -42,17 +44,24 @@ public class ClientService {
                 clientUpdate.setAddresses((client.getAddresses() != null) ? client.getAddresses() : clientUpdate.getAddresses());
                 clientUpdate.setPhones((client.getPhones() != null) ? client.getPhones() : clientUpdate.getPhones());
                 clientUpdate.setEmail((client.getEmail() != null) ? client.getEmail() : clientUpdate.getEmail());
+                clientUpdate.setNationality((client.getNationality()!= null) ? client.getNationality(): clientUpdate.getNationality());
                 clientUpdate.setContributor((client.getContributor() != null) ? client.getContributor() : clientUpdate.getContributor());
                 clientUpdate.setTotalBalanceAccount((client.getTotalBalanceAccount() != null) ? client.getTotalBalanceAccount() : clientUpdate.getTotalBalanceAccount());
                 this.clientRepo.save(clientUpdate);                
+            }else{
+                throw new UpdateException("client", "Ocurrio un error, no existe el cliente.");
             }
         } catch (Exception e) {
             throw new UpdateException("client", "Ocurrio un error al actualizar el cliente: " + client.toString(), e);
         }
     }
     
-    public Client findClients(Client client){
-         Client clientFind = this.clientRepo.findByClientIn(client);
-         return clientFind;
+    public Client findClients(Client client) throws DocumentNotFoundException {
+         try {
+            Client clientFind = this.clientRepo.findByNamesAndSurnamesAndTotalBalanceAccountIn(client);
+            return clientFind;
+        } catch (Exception e) {
+            throw new DocumentNotFoundException("No se encontro el cliente.");
+        }
     }
 }
