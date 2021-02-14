@@ -1,4 +1,4 @@
-package ec.edu.espe.corebancario;
+package ec.edu.espe.corebancario.clients;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
