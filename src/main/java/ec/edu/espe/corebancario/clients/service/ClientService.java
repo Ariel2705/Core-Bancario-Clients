@@ -28,6 +28,7 @@ public class ClientService {
 
     public void createClient(Client client) throws InsertException {
         try {
+            log.info("Creando cliente");
             client.setTotalBalanceAccount(BigDecimal.ZERO);
             this.clientRepo.insert(client);
         } catch (Exception e) {
@@ -39,6 +40,7 @@ public class ClientService {
         try {
             Client clientUpdate = this.clientRepo.findByIdentification(client.getIdentification());
             if(clientUpdate != null) {
+                log.info("Actualizando datos del cliente");
                 clientUpdate.setNames((client.getNames() != null) ? client.getNames() : clientUpdate.getNames());
                 clientUpdate.setSurnames((client.getSurnames() != null) ? client.getSurnames() : clientUpdate.getSurnames());
                 clientUpdate.setGenre((client.getGenre() != null) ? client.getGenre() : clientUpdate.getGenre());
@@ -59,6 +61,7 @@ public class ClientService {
     
     public List<Client> findClientsByNamesAndSurnames(Client client) throws DocumentNotFoundException {
          try {
+            log.info("Buscando clientes con nombres: " + client.getNames() + " y apellidos" + client.getSurnames());
             List<Client> clientFind = this.clientRepo.findByNamesAndSurnames(client.getNames(),client.getSurnames());
             if(clientFind != null){
               return clientFind;  
@@ -72,6 +75,7 @@ public class ClientService {
     
     public List<Client> findClientsByTotalBalanceAccount(Integer from, Integer to) throws DocumentNotFoundException {
          try {
+            log.info("Listando cuentas con saldo entre: " + from + " hasta " + to);
             List<Client> clientFind = this.clientRepo.findByTotalBalanceAccountBetween(from,to);
             if(clientFind != null){
               return clientFind;  

@@ -40,6 +40,11 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
         return MongoClients.create("mongodb://"+ this.appValues.getMongoHost() + "/" + this.appValues.getMongoDB());
     }
     
+    @Override
+    protected boolean autoIndexCreation() {
+        return true;
+    }
+    
     @Bean
     @Override
     public MappingMongoConverter mappingMongoConverter(MongoDatabaseFactory databaseFactory, MongoCustomConversions customConversions, MongoMappingContext mappingContext) {
