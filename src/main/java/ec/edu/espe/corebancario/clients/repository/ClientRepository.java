@@ -10,9 +10,9 @@ import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface ClientRepository extends MongoRepository<Client, String> {
-       
+public interface ClientRepository extends MongoRepository<Client, String> {       
     Client findByIdentification(String identification);
     List<Client> findByNamesAndSurnames(String names,String surNames);
-    List<Client> findByTotalBalanceAccountBetween(Integer from, Integer to);  
+    List<Client> findByTotalBalanceAccountBetween(Integer from, Integer to);
+    List<Client> findByGenre(String genre);
 }

@@ -63,7 +63,7 @@ public class ClientService {
          try {
             log.info("Buscando clientes con nombres: " + client.getNames() + " y apellidos" + client.getSurnames());
             List<Client> clientFind = this.clientRepo.findByNamesAndSurnames(client.getNames(),client.getSurnames());
-            if(clientFind != null){
+            if(!clientFind.isEmpty()){
               return clientFind;  
             }else{
              throw new DocumentNotFoundException("No se encontro el cliente.");
@@ -77,6 +77,34 @@ public class ClientService {
          try {
             log.info("Listando cuentas con saldo entre: " + from + " hasta " + to);
             List<Client> clientFind = this.clientRepo.findByTotalBalanceAccountBetween(from,to);
+            if(!clientFind.isEmpty()){
+              return clientFind;  
+            }else{
+             throw new DocumentNotFoundException("No se encontro el cliente.");
+         }            
+        } catch (Exception e) {
+            throw new DocumentNotFoundException("No se encontro el cliente.");
+        }
+    }
+    
+    public List<Client> findClientsByGenre(String genre) throws DocumentNotFoundException{
+        try {
+            log.info("Listando cuentas con genero: " + genre);
+            List<Client> clientFind = this.clientRepo.findByGenre(genre);
+            if(!clientFind.isEmpty()){
+              return clientFind;  
+            }else{
+             throw new DocumentNotFoundException("No se encontro el cliente.");
+         }            
+        } catch (Exception e) {
+            throw new DocumentNotFoundException("No se encontro el cliente.");
+        }
+    }
+    
+    public Client findClientByIdentification(String identification) throws DocumentNotFoundException{
+        try {
+            log.info("Cuenta con identificacion: " + identification);
+            Client clientFind = this.clientRepo.findByIdentification(identification);
             if(clientFind != null){
               return clientFind;  
             }else{
