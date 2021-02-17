@@ -6,6 +6,8 @@
 package ec.edu.espe.corebancario.clients.api;
 
 import ec.edu.espe.corebancario.clients.api.dto.UpdateClientRQ;
+import ec.edu.espe.corebancario.clients.api.dto.GenreRQ;
+import ec.edu.espe.corebancario.clients.api.dto.IdentificationRQ;
 import ec.edu.espe.corebancario.clients.api.dto.TotalBalanceAccountRQ;
 import ec.edu.espe.corebancario.clients.exception.DocumentNotFoundException;
 import ec.edu.espe.corebancario.clients.exception.InsertException;
@@ -53,6 +55,24 @@ public class ClientController {
         }
     }
 
+    @GetMapping("/findClientByGenre")
+    public ResponseEntity findClientByGenre(@RequestBody GenreRQ genreRQ) {
+        try {
+            return ResponseEntity.ok(this.service.findClientsByGenre(genreRQ.getGenre()));
+        } catch (DocumentNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @GetMapping("/findClientById")
+    public ResponseEntity findClientById(@RequestBody IdentificationRQ identificationRQ) {
+        try {
+            return ResponseEntity.ok(this.service.findClientByIdentification(identificationRQ.getIdentification()));
+        } catch (DocumentNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
     @PostMapping("/create")
     public ResponseEntity create(@RequestBody Client client) {
         try {
