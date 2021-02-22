@@ -18,7 +18,6 @@ import ec.edu.espe.corebancario.clients.service.ClientService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,15 +40,6 @@ public class ClientController {
     public ResponseEntity findClientByNamesAndSurnames(@RequestBody Client client) {
         try {
             return ResponseEntity.ok(this.service.findClientsByNamesAndSurnames(client));
-        } catch (DocumentNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @GetMapping("/findClientByTotalBalanceAccount")
-    public ResponseEntity findClientByTotalBalanceAccount(@RequestBody TotalBalanceAccountRQ balance) {
-        try {
-            return ResponseEntity.ok(this.service.findClientsByTotalBalanceAccount(balance.getFrom(), balance.getTo()));
         } catch (DocumentNotFoundException ex) {
             return ResponseEntity.notFound().build();
         }
