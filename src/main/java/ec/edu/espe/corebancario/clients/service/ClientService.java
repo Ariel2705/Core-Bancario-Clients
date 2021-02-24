@@ -6,11 +6,15 @@
 package ec.edu.espe.corebancario.clients.service;
 
 import ec.edu.espe.corebancario.clients.api.dto.UpdateClientRQ;
+import ec.edu.espe.corebancario.clients.api.dto.ClientRQ;
+import ec.edu.espe.corebancario.clients.enums.TypeClientEnum;
 import ec.edu.espe.corebancario.clients.exception.DocumentNotFoundException;
 import ec.edu.espe.corebancario.clients.exception.InsertException;
 import ec.edu.espe.corebancario.clients.exception.UpdateException;
 import ec.edu.espe.corebancario.clients.model.Client;
 import ec.edu.espe.corebancario.clients.repository.ClientRepository;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,7 +41,7 @@ public class ClientService {
     public void updateClient(UpdateClientRQ client) throws UpdateException {
         try {
             Client clientUpdate = this.clientRepo.findByIdentification(client.getIdentification());
-            if(clientUpdate != null) {
+            if (clientUpdate != null) {
                 log.info("Actualizando datos del cliente");
                 clientUpdate.setNames((client.getNames() != null) ? client.getNames() : clientUpdate.getNames());
                 clientUpdate.setSurnames((client.getSurnames() != null) ? client.getSurnames() : clientUpdate.getSurnames());
@@ -45,56 +49,171 @@ public class ClientService {
                 clientUpdate.setAddresses((client.getAddresses() != null) ? client.getAddresses() : clientUpdate.getAddresses());
                 clientUpdate.setPhones((client.getPhones() != null) ? client.getPhones() : clientUpdate.getPhones());
                 clientUpdate.setEmail((client.getEmail() != null) ? client.getEmail() : clientUpdate.getEmail());
-                clientUpdate.setNationality((client.getNationality()!= null) ? client.getNationality(): clientUpdate.getNationality());
+                clientUpdate.setNationality((client.getNationality() != null) ? client.getNationality() : clientUpdate.getNationality());
                 clientUpdate.setContributor((client.getContributor() != null) ? client.getContributor() : clientUpdate.getContributor());
-                this.clientRepo.save(clientUpdate);                
-            }else{
+                this.clientRepo.save(clientUpdate);
+            } else {
                 throw new UpdateException("client", "Ocurrio un error, no existe el cliente.");
             }
         } catch (Exception e) {
             throw new UpdateException("client", "Ocurrio un error al actualizar el cliente: " + client.toString(), e);
         }
     }
-    
-    public List<Client> findClientsByNamesAndSurnames(Client client) throws DocumentNotFoundException {
-         try {
-            log.info("Buscando clientes con nombres: " + client.getNames() + " y apellidos" + client.getSurnames());
-            List<Client> clientFind = this.clientRepo.findByNamesAndSurnames(client.getNames(),client.getSurnames());
-            if(!clientFind.isEmpty()){
-              return clientFind;  
-            }else{
-             throw new DocumentNotFoundException("No se encontro el cliente.");
-         }            
-        } catch (Exception e) {
-            throw new DocumentNotFoundException("No se encontro el cliente.");
-        }
-    }    
-    
-    public List<Client> findClientsByGenre(String genre) throws DocumentNotFoundException{
+
+    public ClientRQ findClientByIdentification(String identification) throws DocumentNotFoundException {
         try {
-            log.info("Listando cuentas con genero: " + genre);
-            List<Client> clientFind = this.clientRepo.findByGenre(genre);
-            if(!clientFind.isEmpty()){
-              return clientFind;  
-            }else{
-             throw new DocumentNotFoundException("No se encontro el cliente.");
-         }            
+            log.info("Cliente con identificacion: " + identification);
+            Client clientFind = this.clientRepo.findByIdentification(identification);
+            if (clientFind != null) {
+                ClientRQ clientRQ = new ClientRQ();
+                clientRQ.setIdentification(clientFind.getIdentification());
+                clientRQ.setAddresses(clientFind.getAddresses());
+                clientRQ.setContributor(clientFind.getContributor());
+                clientRQ.setEmail(clientFind.getEmail());
+                clientRQ.setNames(clientFind.getNames());
+                clientRQ.setSurnames(clientFind.getSurnames());
+                clientRQ.setPhones(clientFind.getPhones());
+                return clientRQ;
+            } else {
+                throw new DocumentNotFoundException("No se encontro el cliente.");
+            }
         } catch (Exception e) {
-            throw new DocumentNotFoundException("No se encontro el cliente.");
+            throw new DocumentNotFoundException("Error al buscar cliente.");
         }
     }
-    
-    public Client findClientByIdentification(String identification) throws DocumentNotFoundException{
+
+    public List<ClientRQ> findClientByBirthDate(Date birthdate) throws DocumentNotFoundException {
         try {
-            log.info("Cuenta con identificacion: " + identification);
-            Client clientFind = this.clientRepo.findByIdentification(identification);
-            if(clientFind != null){
-              return clientFind;  
-            }else{
-             throw new DocumentNotFoundException("No se encontro el cliente.");
-         }            
+            log.info("Clientes con anio de nacimiento: " + birthdate.toString());
+            List<Client> clientFind = this.clientRepo.findByBirthdate(birthdate);
+            if (!clientFind.isEmpty()) {
+                List<ClientRQ> clients = new ArrayList<>(clientFind.size());
+                for (int i = 0; i < clientFind.size(); i++) {
+                    ClientRQ clientRQ = new ClientRQ();
+                    clientRQ.setIdentification(clientFind.get(i).getIdentification());
+                    clientRQ.setAddresses(clientFind.get(i).getAddresses());
+                    clientRQ.setContributor(clientFind.get(i).getContributor());
+                    clientRQ.setEmail(clientFind.get(i).getEmail());
+                    clientRQ.setNames(clientFind.get(i).getNames());
+                    clientRQ.setSurnames(clientFind.get(i).getSurnames());
+                    clientRQ.setPhones(clientFind.get(i).getPhones());
+                    clients.add(clientRQ);
+                }
+                return clients;
+            } else {
+                throw new DocumentNotFoundException("No se encontro cliente/es nacidos en " + birthdate.toString());
+            }
         } catch (Exception e) {
-            throw new DocumentNotFoundException("No se encontro el cliente.");
+            throw new DocumentNotFoundException("Error al buscar clientes.");
+        }
+    }
+
+    public List<ClientRQ> findClientByProvince(String province) throws DocumentNotFoundException {
+        try {
+            log.info("Clientes residentes en la provincia: " + province);
+            List<Client> clientFind = this.clientRepo.findByAddressesProvince(province);
+            if (!clientFind.isEmpty()) {
+                List<ClientRQ> clients = new ArrayList<>(clientFind.size());
+                for (int i = 0; i < clientFind.size(); i++) {
+                    ClientRQ clientRQ = new ClientRQ();
+                    clientRQ.setIdentification(clientFind.get(i).getIdentification());
+                    clientRQ.setAddresses(clientFind.get(i).getAddresses());
+                    clientRQ.setContributor(clientFind.get(i).getContributor());
+                    clientRQ.setEmail(clientFind.get(i).getEmail());
+                    clientRQ.setNames(clientFind.get(i).getNames());
+                    clientRQ.setSurnames(clientFind.get(i).getSurnames());
+                    clientRQ.setPhones(clientFind.get(i).getPhones());
+                    clients.add(clientRQ);
+                }
+                return clients;
+            } else {
+                throw new DocumentNotFoundException("No se encontro cliente/es con residencia en " + province);
+            }
+        } catch (Exception e) {
+            throw new DocumentNotFoundException("Error al buscar clientes.");
+        }
+    }
+
+    public List<ClientRQ> findClientByCanton(String canton) throws DocumentNotFoundException {
+        try {
+            log.info("Clientes residentes en el canton: " + canton);
+            List<Client> clientFind = this.clientRepo.findByAddressesCanton(canton);
+            if (!clientFind.isEmpty()) {
+                List<ClientRQ> clients = new ArrayList<>(clientFind.size());
+                for (int i = 0; i < clientFind.size(); i++) {
+                    ClientRQ clientRQ = new ClientRQ();
+                    clientRQ.setIdentification(clientFind.get(i).getIdentification());
+                    clientRQ.setAddresses(clientFind.get(i).getAddresses());
+                    clientRQ.setContributor(clientFind.get(i).getContributor());
+                    clientRQ.setEmail(clientFind.get(i).getEmail());
+                    clientRQ.setNames(clientFind.get(i).getNames());
+                    clientRQ.setSurnames(clientFind.get(i).getSurnames());
+                    clientRQ.setPhones(clientFind.get(i).getPhones());
+                    clients.add(clientRQ);
+                }
+                return clients;
+            } else {
+                throw new DocumentNotFoundException("No se encontro cliente/es con residencia en " + canton);
+            }
+        } catch (Exception e) {
+            throw new DocumentNotFoundException("Error al buscar clientes.");
+        }
+    }
+
+    public List<ClientRQ> findClientByParish(String parish) throws DocumentNotFoundException {
+        try {
+            log.info("Clientes residentes en la parroquia: " + parish);
+            List<Client> clientFind = this.clientRepo.findByAddressesParish(parish);
+            if (!clientFind.isEmpty()) {
+                List<ClientRQ> clients = new ArrayList<>(clientFind.size());
+                for (int i = 0; i < clientFind.size(); i++) {
+                    ClientRQ clientRQ = new ClientRQ();
+                    clientRQ.setIdentification(clientFind.get(i).getIdentification());
+                    clientRQ.setAddresses(clientFind.get(i).getAddresses());
+                    clientRQ.setContributor(clientFind.get(i).getContributor());
+                    clientRQ.setEmail(clientFind.get(i).getEmail());
+                    clientRQ.setNames(clientFind.get(i).getNames());
+                    clientRQ.setSurnames(clientFind.get(i).getSurnames());
+                    clientRQ.setPhones(clientFind.get(i).getPhones());
+                    clients.add(clientRQ);
+                }
+                return clients;
+            } else {
+                throw new DocumentNotFoundException("No se encontro cliente/es con residencia en " + parish);
+            }
+        } catch (Exception e) {
+            throw new DocumentNotFoundException("Error al buscar clientes.");
+        }
+    }
+
+    public List<ClientRQ> findClientByType(String type) throws DocumentNotFoundException {
+        try {
+            log.info("Clientes por tipo : " + type);
+            List<Client> clientFind = new ArrayList<>();
+            if (TypeClientEnum.NATURAL.getDescription().equals(type)) {
+                clientFind = this.clientRepo.findByContributorNull();
+            } else if (TypeClientEnum.JURIDICA.getDescription().equals(type)) {
+                clientFind = this.clientRepo.findByContributorNotNull();
+            }
+            if (!clientFind.isEmpty()) {
+                List<ClientRQ> clients = new ArrayList<>(clientFind.size());
+                for (int i = 0; i < clientFind.size(); i++) {
+                    ClientRQ clientRQ = new ClientRQ();
+                    clientRQ.setIdentification(clientFind.get(i).getIdentification());
+                    clientRQ.setAddresses(clientFind.get(i).getAddresses());
+                    clientRQ.setContributor(clientFind.get(i).getContributor());
+                    clientRQ.setEmail(clientFind.get(i).getEmail());
+                    clientRQ.setNames(clientFind.get(i).getNames());
+                    clientRQ.setSurnames(clientFind.get(i).getSurnames());
+                    clientRQ.setPhones(clientFind.get(i).getPhones());
+                    clients.add(clientRQ);
+                }
+                return clients;
+            } else {
+                throw new DocumentNotFoundException("No se encontro cliente/es tipo " + type);
+            }
+        } catch (Exception e) {
+            throw new DocumentNotFoundException("Error al buscar clientes.");
         }
     }
 }

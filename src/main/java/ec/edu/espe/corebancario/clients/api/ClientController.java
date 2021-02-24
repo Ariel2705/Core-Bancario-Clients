@@ -6,18 +6,19 @@
 package ec.edu.espe.corebancario.clients.api;
 
 import ec.edu.espe.corebancario.clients.api.dto.UpdateClientRQ;
-import ec.edu.espe.corebancario.clients.api.dto.GenreRQ;
-import ec.edu.espe.corebancario.clients.api.dto.IdentificationRQ;
-import ec.edu.espe.corebancario.clients.api.dto.TotalBalanceAccountRQ;
 import ec.edu.espe.corebancario.clients.exception.DocumentNotFoundException;
 import ec.edu.espe.corebancario.clients.exception.InsertException;
 import ec.edu.espe.corebancario.clients.exception.UpdateException;
 import ec.edu.espe.corebancario.clients.model.Client;
 
 import ec.edu.espe.corebancario.clients.service.ClientService;
+import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.repository.query.Param;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,29 +36,56 @@ public class ClientController {
     public ClientController(ClientService service) {
         this.service = service;
     }
-
-    @GetMapping("/findClientByNamesAndSurnames")
-    public ResponseEntity findClientByNamesAndSurnames(@RequestBody Client client) {
+    
+    @GetMapping("/findClientById/{identification}")
+    public ResponseEntity findClientById(@PathVariable String identification) {
         try {
-            return ResponseEntity.ok(this.service.findClientsByNamesAndSurnames(client));
-        } catch (DocumentNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @GetMapping("/findClientByGenre")
-    public ResponseEntity findClientByGenre(@RequestBody GenreRQ genreRQ) {
-        try {
-            return ResponseEntity.ok(this.service.findClientsByGenre(genreRQ.getGenre()));
+            return ResponseEntity.ok(this.service.findClientByIdentification(identification));
         } catch (DocumentNotFoundException ex) {
             return ResponseEntity.notFound().build();
         }
     }
     
-    @GetMapping("/findClientById")
-    public ResponseEntity findClientById(@RequestBody IdentificationRQ identificationRQ) {
+    @GetMapping("/findClientByBirthdate/{birthdate}")
+    public ResponseEntity findClientByBirthdate(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date birthdate) {        
         try {
-            return ResponseEntity.ok(this.service.findClientByIdentification(identificationRQ.getIdentification()));
+            return ResponseEntity.ok(this.service.findClientByBirthDate(birthdate));
+        } catch (DocumentNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @GetMapping("/findClientByProvince/{province}")
+    public ResponseEntity findClientByProvince(@PathVariable String province) {        
+        try {
+            return ResponseEntity.ok(this.service.findClientByProvince(province));
+        } catch (DocumentNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @GetMapping("/findClientByCanton/{canton}")
+    public ResponseEntity findClientByCanton(@PathVariable String canton) {        
+        try {
+            return ResponseEntity.ok(this.service.findClientByCanton(canton));
+        } catch (DocumentNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @GetMapping("/findClientByParish/{parish}")
+    public ResponseEntity findClientByParish(@PathVariable String parish) {        
+        try {
+            return ResponseEntity.ok(this.service.findClientByParish(parish));
+        } catch (DocumentNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @GetMapping("/findClientByType/{type}")
+    public ResponseEntity findClientByType(@PathVariable String type) {        
+        try {
+            return ResponseEntity.ok(this.service.findClientByType(type));
         } catch (DocumentNotFoundException ex) {
             return ResponseEntity.notFound().build();
         }
