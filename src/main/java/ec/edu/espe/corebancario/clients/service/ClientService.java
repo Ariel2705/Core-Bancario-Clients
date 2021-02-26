@@ -5,6 +5,10 @@
  */
 package ec.edu.espe.corebancario.clients.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.request.GetRequest;
 import ec.edu.espe.corebancario.clients.api.dto.UpdateClientRQ;
 import ec.edu.espe.corebancario.clients.api.dto.ClientRQ;
 import ec.edu.espe.corebancario.clients.enums.TypeClientEnum;
@@ -13,6 +17,7 @@ import ec.edu.espe.corebancario.clients.exception.InsertException;
 import ec.edu.espe.corebancario.clients.exception.UpdateException;
 import ec.edu.espe.corebancario.clients.model.Client;
 import ec.edu.espe.corebancario.clients.repository.ClientRepository;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -216,4 +221,35 @@ public class ClientService {
             throw new DocumentNotFoundException("Error al buscar clientes.");
         }
     }
+
+    public List<ClientRQ> findClientByBalance(BigDecimal balance) throws DocumentNotFoundException {
+        try {
+            List<Client> clientFind = this.clientRepo.findAll();
+            List<ClientRQ> clients = new ArrayList<>();
+            for (int i = 0; i < clientFind.size(); i++) {
+                String response = Unirest.get("http://localhost:8082/api/corebancario/account/balanceClient/{identification}")
+                        .routeParam("identification", clientFind.get(i).getIdentification()).asString().getBody();
+                if (new BigDecimal(response).compareTo(balance) >= 0) {
+                    ClientRQ clientRQ = new ClientRQ();
+                    clientRQ.setIdentification(clientFind.get(i).getIdentification());
+                    clientRQ.setAddresses(clientFind.get(i).getAddresses());
+                    clientRQ.setContributor(clientFind.get(i).getContributor());
+                    clientRQ.setEmail(clientFind.get(i).getEmail());
+                    clientRQ.setNames(clientFind.get(i).getNames());
+                    clientRQ.setSurnames(clientFind.get(i).getSurnames());
+                    clientRQ.setPhones(clientFind.get(i).getPhones());
+                    clients.add(clientRQ);
+                }
+            }
+            if (!clients.isEmpty()){
+                return clients;
+            }else{
+                log.error("No existen clientes con balance de cuenta mayor o igual al solicitado.");
+                throw new DocumentNotFoundException("No existen clientes con balance de cuenta mayor o igual al solicitado.");
+            }           
+        } catch (Exception e) {
+            throw new DocumentNotFoundException("Error al buscar clientes.");
+        }
+    }
+
 }
