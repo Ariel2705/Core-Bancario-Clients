@@ -12,6 +12,9 @@ import ec.edu.espe.corebancario.clients.exception.UpdateException;
 import ec.edu.espe.corebancario.clients.model.Client;
 
 import ec.edu.espe.corebancario.clients.service.ClientService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.repository.query.Param;
@@ -38,6 +41,11 @@ public class ClientController {
     }
     
     @GetMapping("/findClientById/{identification}")
+    @ApiOperation(value = "Busqueda de cliente por número de identificacion", notes = "Busqueda de cliente por número de identificacion. Un cliente puede tener cuentas y tarjetas de credito.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Cliente encontrado"),
+        @ApiResponse(code = 404, message = "Cliente no existente")
+    })
     public ResponseEntity findClientById(@PathVariable String identification) {
         try {
             return ResponseEntity.ok(this.service.findClientByIdentification(identification));
@@ -47,6 +55,11 @@ public class ClientController {
     }
     
     @GetMapping("/findClientByBirthdate/{birthdate}")
+    @ApiOperation(value = "Busqueda de clientes por fecha de nacimiento", notes = "Busqueda de clientes por fecha de nacimiento.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Cliente/es encontrado"),
+        @ApiResponse(code = 404, message = "Cliente/es no existente")
+    })
     public ResponseEntity findClientByBirthdate(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date birthdate) {        
         try {
             return ResponseEntity.ok(this.service.findClientByBirthDate(birthdate));
@@ -56,6 +69,11 @@ public class ClientController {
     }
     
     @GetMapping("/findClientByProvince/{province}")
+    @ApiOperation(value = "Busqueda de clientes por provincia de residencia", notes = "Un cliente puede tener varias direcciones de residencia.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Cliente/es encontrado"),
+        @ApiResponse(code = 404, message = "Cliente/es no existente")
+    })
     public ResponseEntity findClientByProvince(@PathVariable String province) {        
         try {
             return ResponseEntity.ok(this.service.findClientByProvince(province));
@@ -65,6 +83,11 @@ public class ClientController {
     }
     
     @GetMapping("/findClientByCanton/{canton}")
+    @ApiOperation(value = "Busqueda de clientes por canton de residencia", notes = "Un cliente puede tener varias direcciones de residencia.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Cliente/es encontrado"),
+        @ApiResponse(code = 404, message = "Cliente/es no existente")
+    })
     public ResponseEntity findClientByCanton(@PathVariable String canton) {        
         try {
             return ResponseEntity.ok(this.service.findClientByCanton(canton));
@@ -74,6 +97,11 @@ public class ClientController {
     }
     
     @GetMapping("/findClientByParish/{parish}")
+    @ApiOperation(value = "Busqueda de clientes por parroquia de residencia", notes = "Un cliente puede tener varias direcciones de residencia.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Cliente/es encontrado"),
+        @ApiResponse(code = 404, message = "Cliente/es no existente")
+    })
     public ResponseEntity findClientByParish(@PathVariable String parish) {        
         try {
             return ResponseEntity.ok(this.service.findClientByParish(parish));
@@ -83,6 +111,11 @@ public class ClientController {
     }
     
     @GetMapping("/findClientByType/{type}")
+    @ApiOperation(value = "Busqueda de clientes por tipo de persona", notes = "Un cliente puede ser tipo persona natural o juridica.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Cliente/es encontrado"),
+        @ApiResponse(code = 404, message = "Cliente/es no existente")
+    })
     public ResponseEntity findClientByType(@PathVariable String type) {        
         try {
             return ResponseEntity.ok(this.service.findClientByType(type));
@@ -92,6 +125,11 @@ public class ClientController {
     }
     
     @PostMapping("/create")
+    @ApiOperation(value = "Crea un cliente", notes = "Crea un cliente del Banco. Un cliente tiene cuentas o al menos una cuenta, y tambien puede tener tarjetas de credito")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Cliente creado"),
+        @ApiResponse(code = 400, message = "Error al crear cliente")
+    })
     public ResponseEntity create(@RequestBody Client client) {
         try {
             this.service.createClient(client);
@@ -102,6 +140,11 @@ public class ClientController {
     }
 
     @PutMapping("/update")
+    @ApiOperation(value = "Actualiza campos de un cliente", notes = "Actualiza campos permitidos de un cliente.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Cliente actualizado"),
+        @ApiResponse(code = 400, message = "Error al actualizar cliente")
+    })
     public ResponseEntity update(@RequestBody UpdateClientRQ updateClient) {
         try {
             this.service.updateClient(updateClient);
