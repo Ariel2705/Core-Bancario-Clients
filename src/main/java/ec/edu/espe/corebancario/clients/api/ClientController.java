@@ -15,6 +15,7 @@ import ec.edu.espe.corebancario.clients.service.ClientService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.math.BigDecimal;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.repository.query.Param;
@@ -108,17 +109,17 @@ public class ClientController {
         } catch (DocumentNotFoundException ex) {
             return ResponseEntity.notFound().build();
         }
-    }
+    }    
     
-    @GetMapping("/findClientByType/{type}")
-    @ApiOperation(value = "Busqueda de clientes por tipo de persona", notes = "Un cliente puede ser tipo persona natural o juridica.")
+    @GetMapping("/findClientByBalance/{balance}")
+    @ApiOperation(value = "Busqueda de clientes por balance de cuentas mayor o igual al balance solicitado", notes = "El balance de un cliente, dependerá del balance de todas sus cuentas.")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Cliente/es encontrado"),
         @ApiResponse(code = 404, message = "Cliente/es no existente")
     })
-    public ResponseEntity findClientByType(@PathVariable String type) {        
+    public ResponseEntity findClientByBalance(@PathVariable BigDecimal balance) {        
         try {
-            return ResponseEntity.ok(this.service.findClientByType(type));
+            return ResponseEntity.ok(this.service.findClientByBalance(balance));
         } catch (DocumentNotFoundException ex) {
             return ResponseEntity.notFound().build();
         }
