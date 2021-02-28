@@ -125,6 +125,20 @@ public class ClientController {
         }
     }
     
+    @GetMapping("/findClientByType/{type}")
+    @ApiOperation(value = "Busqueda de clientes por tipo de persona", notes = "Los clientes pueden ser persona tipo natural o juridico")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Cliente/es encontrado"),
+        @ApiResponse(code = 404, message = "Cliente/es no existente")
+    })
+    public ResponseEntity findClientByType(@PathVariable String type) {        
+        try {
+            return ResponseEntity.ok(this.service.findClientByType(type));
+        } catch (DocumentNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+        
     @PostMapping("/create")
     @ApiOperation(value = "Crea un cliente", notes = "Crea un cliente del Banco. Un cliente tiene cuentas o al menos una cuenta, y tambien puede tener tarjetas de credito")
     @ApiResponses(value = {
