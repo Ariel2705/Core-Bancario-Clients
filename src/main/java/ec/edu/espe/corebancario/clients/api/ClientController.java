@@ -1,16 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ec.edu.espe.corebancario.clients.api;
 
-import ec.edu.espe.corebancario.clients.api.dto.UpdateClientRQ;
+import ec.edu.espe.corebancario.clients.api.dto.UpdateClientRq;
 import ec.edu.espe.corebancario.clients.exception.DocumentNotFoundException;
 import ec.edu.espe.corebancario.clients.exception.InsertException;
 import ec.edu.espe.corebancario.clients.exception.UpdateException;
 import ec.edu.espe.corebancario.clients.model.Client;
-
 import ec.edu.espe.corebancario.clients.service.ClientService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -18,7 +12,6 @@ import io.swagger.annotations.ApiResponses;
 import java.math.BigDecimal;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,9 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(maxAge=3600)
+@CrossOrigin(maxAge = 3600)
 @RestController
-
 @RequestMapping("/api/corebancario/client")
 @Slf4j
 public class ClientController {
@@ -42,12 +34,14 @@ public class ClientController {
     public ClientController(ClientService service) {
         this.service = service;
     }
-    
+
     @GetMapping("/findClientById/{identification}")
-    @ApiOperation(value = "Busqueda de cliente por número de identificacion", notes = "Busqueda de cliente por número de identificacion. Un cliente puede tener cuentas y tarjetas de credito.")
+    @ApiOperation(value = "Busqueda de cliente por número de identificacion",
+            notes = "Busqueda de cliente por número de identificacion."
+                    + " Un cliente puede tener cuentas y tarjetas de credito.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Cliente encontrado"),
-        @ApiResponse(code = 404, message = "Cliente no existente")
+            @ApiResponse(code = 200, message = "Cliente encontrado"),
+            @ApiResponse(code = 404, message = "Cliente no existente")
     })
     public ResponseEntity findClientById(@PathVariable String identification) {
         try {
@@ -56,96 +50,105 @@ public class ClientController {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     @GetMapping("/findClientByBirthdate/{birthdate}")
-    @ApiOperation(value = "Busqueda de clientes por fecha de nacimiento", notes = "Busqueda de clientes por fecha de nacimiento.")
+    @ApiOperation(value = "Busqueda de clientes por fecha de nacimiento",
+            notes = "Busqueda de clientes por fecha de nacimiento.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Cliente/es encontrado"),
-        @ApiResponse(code = 404, message = "Cliente/es no existente")
+            @ApiResponse(code = 200, message = "Cliente/es encontrado"),
+            @ApiResponse(code = 404, message = "Cliente/es no existente")
     })
-    public ResponseEntity findClientByBirthdate(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date birthdate) {        
+    public ResponseEntity findClientByBirthdate(
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date birthdate) {
         try {
             return ResponseEntity.ok(this.service.findClientByBirthDate(birthdate));
         } catch (DocumentNotFoundException ex) {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     @GetMapping("/findClientByProvince/{province}")
-    @ApiOperation(value = "Busqueda de clientes por provincia de residencia", notes = "Un cliente puede tener varias direcciones de residencia.")
+    @ApiOperation(value = "Busqueda de clientes por provincia de residencia",
+            notes = "Un cliente puede tener varias direcciones de residencia.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Cliente/es encontrado"),
-        @ApiResponse(code = 404, message = "Cliente/es no existente")
+            @ApiResponse(code = 200, message = "Cliente/es encontrado"),
+            @ApiResponse(code = 404, message = "Cliente/es no existente")
     })
-    public ResponseEntity findClientByProvince(@PathVariable String province) {        
+    public ResponseEntity findClientByProvince(@PathVariable String province) {
         try {
             return ResponseEntity.ok(this.service.findClientByProvince(province));
         } catch (DocumentNotFoundException ex) {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     @GetMapping("/findClientByCanton/{canton}")
-    @ApiOperation(value = "Busqueda de clientes por canton de residencia", notes = "Un cliente puede tener varias direcciones de residencia.")
+    @ApiOperation(value = "Busqueda de clientes por canton de residencia",
+            notes = "Un cliente puede tener varias direcciones de residencia.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Cliente/es encontrado"),
-        @ApiResponse(code = 404, message = "Cliente/es no existente")
+            @ApiResponse(code = 200, message = "Cliente/es encontrado"),
+            @ApiResponse(code = 404, message = "Cliente/es no existente")
     })
-    public ResponseEntity findClientByCanton(@PathVariable String canton) {        
+    public ResponseEntity findClientByCanton(@PathVariable String canton) {
         try {
             return ResponseEntity.ok(this.service.findClientByCanton(canton));
         } catch (DocumentNotFoundException ex) {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     @GetMapping("/findClientByParish/{parish}")
-    @ApiOperation(value = "Busqueda de clientes por parroquia de residencia", notes = "Un cliente puede tener varias direcciones de residencia.")
+    @ApiOperation(value = "Busqueda de clientes por parroquia de residencia",
+            notes = "Un cliente puede tener varias direcciones de residencia.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Cliente/es encontrado"),
-        @ApiResponse(code = 404, message = "Cliente/es no existente")
+            @ApiResponse(code = 200, message = "Cliente/es encontrado"),
+            @ApiResponse(code = 404, message = "Cliente/es no existente")
     })
-    public ResponseEntity findClientByParish(@PathVariable String parish) {        
+    public ResponseEntity findClientByParish(@PathVariable String parish) {
         try {
             return ResponseEntity.ok(this.service.findClientByParish(parish));
         } catch (DocumentNotFoundException ex) {
             return ResponseEntity.notFound().build();
         }
-    }    
-    
+    }
+
     @GetMapping("/findClientByBalance/{balance}")
-    @ApiOperation(value = "Busqueda de clientes por balance de cuentas mayor o igual al balance solicitado", notes = "El balance de un cliente, dependerá del balance de todas sus cuentas.")
+    @ApiOperation(value = "Busqueda de clientes por balance de cuentas mayor o igual al balance solicitado",
+            notes = "El balance de un cliente, dependerá del balance de todas sus cuentas.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Cliente/es encontrado"),
-        @ApiResponse(code = 404, message = "Cliente/es no existente")
+            @ApiResponse(code = 200, message = "Cliente/es encontrado"),
+            @ApiResponse(code = 404, message = "Cliente/es no existente")
     })
-    public ResponseEntity findClientByBalance(@PathVariable BigDecimal balance) {        
+    public ResponseEntity findClientByBalance(@PathVariable BigDecimal balance) {
         try {
             return ResponseEntity.ok(this.service.findClientByBalance(balance));
         } catch (DocumentNotFoundException ex) {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     @GetMapping("/findClientByType/{type}")
-    @ApiOperation(value = "Busqueda de clientes por tipo de persona", notes = "Los clientes pueden ser persona tipo natural o juridico")
+    @ApiOperation(value = "Busqueda de clientes por tipo de persona",
+            notes = "Los clientes pueden ser persona tipo natural o juridico")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Cliente/es encontrado"),
-        @ApiResponse(code = 404, message = "Cliente/es no existente")
+            @ApiResponse(code = 200, message = "Cliente/es encontrado"),
+            @ApiResponse(code = 404, message = "Cliente/es no existente")
     })
-    public ResponseEntity findClientByType(@PathVariable String type) {        
+    public ResponseEntity findClientByType(@PathVariable String type) {
         try {
             return ResponseEntity.ok(this.service.findClientByType(type));
         } catch (DocumentNotFoundException ex) {
             return ResponseEntity.notFound().build();
         }
     }
-        
+
     @PostMapping("/create")
-    @ApiOperation(value = "Crea un cliente", notes = "Crea un cliente del Banco. Un cliente tiene cuentas o al menos una cuenta, y tambien puede tener tarjetas de credito")
+    @ApiOperation(value = "Crea un cliente",
+            notes = "Crea un cliente del Banco. "
+                    + "Un cliente tiene cuentas o al menos una cuenta.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Cliente creado"),
-        @ApiResponse(code = 400, message = "Error al crear cliente")
+            @ApiResponse(code = 200, message = "Cliente creado"),
+            @ApiResponse(code = 400, message = "Error al crear cliente")
     })
     public ResponseEntity create(@RequestBody Client client) {
         try {
@@ -159,10 +162,10 @@ public class ClientController {
     @PutMapping("/update")
     @ApiOperation(value = "Actualiza campos de un cliente", notes = "Actualiza campos permitidos de un cliente.")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Cliente actualizado"),
-        @ApiResponse(code = 400, message = "Error al actualizar cliente")
+            @ApiResponse(code = 200, message = "Cliente actualizado"),
+            @ApiResponse(code = 400, message = "Error al actualizar cliente")
     })
-    public ResponseEntity update(@RequestBody UpdateClientRQ updateClient) {
+    public ResponseEntity update(@RequestBody UpdateClientRq updateClient) {
         try {
             this.service.updateClient(updateClient);
             return ResponseEntity.ok().build();
