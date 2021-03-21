@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ec.edu.espe.corebancario.clients.model;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import lombok.Builder;
@@ -18,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 @Document(collection = "clients")
 public class Client {
+
     @Id
     private String id;
     @Indexed(name = "idxc_identification", unique = true)
