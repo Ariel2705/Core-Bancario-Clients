@@ -14,7 +14,10 @@
     <name>clientes</name>
     <description>Módulo de clientes del core bancario del banco banquito</description>
     <properties>
-        <java.version>11</java.version>
+        <java.version>11</java.version>             
+        <sonar.projectKey>Ariel2705_Core-Bancario-Clients</sonar.projectKey>
+        <sonar.organization>ariel2705</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
     <dependencies>
         <dependency>
