@@ -16,10 +16,10 @@ public class ApplicationValues {
 
     @Autowired
     public ApplicationValues(
-            @Value("${transactions.mongo.host}") String mongoHost, 
-            @Value("${transactions.mongo.db}") String mongoDb,
-            @Value("${transactions.mongo.username}") String username, 
-            @Value("${transactions.mongo.pwd}") String pwd) {
+            @Value("${clients.mongo.host}") String mongoHost, 
+            @Value("${clients.mongo.db}") String mongoDb,
+            @Value("${clients.mongo.username}") String username, 
+            @Value("${clients.mongo.pwd}") String pwd) {
         this.mongoHost = mongoHost;
         this.mongoDb = mongoDb;
         this.username = username;
