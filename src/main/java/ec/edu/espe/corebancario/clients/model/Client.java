@@ -26,5 +26,4 @@ public class Client {
     private List<Phone> phones;
     private String nationality;
     private Contributor contributor;
-
 }

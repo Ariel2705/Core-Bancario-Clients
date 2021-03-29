@@ -1,5 +1,6 @@
 package ec.edu.espe.corebancario.clients.api;
 
+import ec.edu.espe.corebancario.clients.api.dto.ClientRq;
 import ec.edu.espe.corebancario.clients.api.dto.UpdateClientRq;
 import ec.edu.espe.corebancario.clients.exception.DocumentNotFoundException;
 import ec.edu.espe.corebancario.clients.exception.InsertException;
@@ -11,6 +12,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +45,7 @@ public class ClientController {
             @ApiResponse(code = 200, message = "Cliente encontrado"),
             @ApiResponse(code = 404, message = "Cliente no existente")
     })
-    public ResponseEntity findClientById(@PathVariable String identification) {
+    public ResponseEntity<ClientRq> findClientById(@PathVariable String identification) {
         try {
             return ResponseEntity.ok(this.service.findClientByIdentification(identification));
         } catch (DocumentNotFoundException ex) {
@@ -58,7 +60,7 @@ public class ClientController {
             @ApiResponse(code = 200, message = "Cliente/es encontrado"),
             @ApiResponse(code = 404, message = "Cliente/es no existente")
     })
-    public ResponseEntity findClientByBirthdate(
+    public ResponseEntity<List<ClientRq>> findClientByBirthdate(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date birthdate) {
         try {
             return ResponseEntity.ok(this.service.findClientByBirthDate(birthdate));
@@ -74,7 +76,7 @@ public class ClientController {
             @ApiResponse(code = 200, message = "Cliente/es encontrado"),
             @ApiResponse(code = 404, message = "Cliente/es no existente")
     })
-    public ResponseEntity findClientByProvince(@PathVariable String province) {
+    public ResponseEntity<List<ClientRq>> findClientByProvince(@PathVariable String province) {
         try {
             return ResponseEntity.ok(this.service.findClientByProvince(province));
         } catch (DocumentNotFoundException ex) {
@@ -89,7 +91,7 @@ public class ClientController {
             @ApiResponse(code = 200, message = "Cliente/es encontrado"),
             @ApiResponse(code = 404, message = "Cliente/es no existente")
     })
-    public ResponseEntity findClientByCanton(@PathVariable String canton) {
+    public ResponseEntity<List<ClientRq>> findClientByCanton(@PathVariable String canton) {
         try {
             return ResponseEntity.ok(this.service.findClientByCanton(canton));
         } catch (DocumentNotFoundException ex) {
@@ -104,7 +106,7 @@ public class ClientController {
             @ApiResponse(code = 200, message = "Cliente/es encontrado"),
             @ApiResponse(code = 404, message = "Cliente/es no existente")
     })
-    public ResponseEntity findClientByParish(@PathVariable String parish) {
+    public ResponseEntity<List<ClientRq>> findClientByParish(@PathVariable String parish) {
         try {
             return ResponseEntity.ok(this.service.findClientByParish(parish));
         } catch (DocumentNotFoundException ex) {
@@ -119,7 +121,7 @@ public class ClientController {
             @ApiResponse(code = 200, message = "Cliente/es encontrado"),
             @ApiResponse(code = 404, message = "Cliente/es no existente")
     })
-    public ResponseEntity findClientByBalance(@PathVariable BigDecimal balance) {
+    public ResponseEntity<List<ClientRq>> findClientByBalance(@PathVariable BigDecimal balance) {
         try {
             return ResponseEntity.ok(this.service.findClientByBalance(balance));
         } catch (DocumentNotFoundException ex) {
@@ -134,7 +136,7 @@ public class ClientController {
             @ApiResponse(code = 200, message = "Cliente/es encontrado"),
             @ApiResponse(code = 404, message = "Cliente/es no existente")
     })
-    public ResponseEntity findClientByType(@PathVariable String type) {
+    public ResponseEntity<List<ClientRq>> findClientByType(@PathVariable String type) {
         try {
             return ResponseEntity.ok(this.service.findClientByType(type));
         } catch (DocumentNotFoundException ex) {
@@ -150,7 +152,7 @@ public class ClientController {
             @ApiResponse(code = 200, message = "Cliente creado"),
             @ApiResponse(code = 400, message = "Error al crear cliente")
     })
-    public ResponseEntity create(@RequestBody Client client) {
+    public ResponseEntity<Client> create(@RequestBody Client client) {
         try {
             this.service.createClient(client);
             return ResponseEntity.ok().build();
@@ -165,7 +167,7 @@ public class ClientController {
             @ApiResponse(code = 200, message = "Cliente actualizado"),
             @ApiResponse(code = 400, message = "Error al actualizar cliente")
     })
-    public ResponseEntity update(@RequestBody UpdateClientRq updateClient) {
+    public ResponseEntity<UpdateClientRq> update(@RequestBody UpdateClientRq updateClient) {
         try {
             this.service.updateClient(updateClient);
             return ResponseEntity.ok().build();
