@@ -36,7 +36,8 @@ public class ClientController {
     public ClientController(ClientService service) {
         this.service = service;
     }
-
+    
+    @PreAuthorize("hasRole('admin') OR hasRole('accountManager')")
     @GetMapping("/findClientById/{identification}")
     @ApiOperation(value = "Busqueda de cliente por número de identificacion",
             notes = "Busqueda de cliente por número de identificacion."
@@ -53,6 +54,7 @@ public class ClientController {
         }
     }
 
+    @PreAuthorize("hasRole('admin') OR hasRole('accountManager')")
     @GetMapping("/findClientByBirthdate/{birthdate}")
     @ApiOperation(value = "Busqueda de clientes por fecha de nacimiento",
             notes = "Busqueda de clientes por fecha de nacimiento.")
@@ -69,6 +71,7 @@ public class ClientController {
         }
     }
 
+    @PreAuthorize("hasRole('admin') OR hasRole('accountManager')")
     @GetMapping("/findClientByProvince/{province}")
     @ApiOperation(value = "Busqueda de clientes por provincia de residencia",
             notes = "Un cliente puede tener varias direcciones de residencia.")
@@ -84,6 +87,7 @@ public class ClientController {
         }
     }
 
+    @PreAuthorize("hasRole('admin') OR hasRole('accountManager')")
     @GetMapping("/findClientByCanton/{canton}")
     @ApiOperation(value = "Busqueda de clientes por canton de residencia",
             notes = "Un cliente puede tener varias direcciones de residencia.")
@@ -99,6 +103,7 @@ public class ClientController {
         }
     }
 
+    @PreAuthorize("hasRole('admin') OR hasRole('accountManager')")
     @GetMapping("/findClientByParish/{parish}")
     @ApiOperation(value = "Busqueda de clientes por parroquia de residencia",
             notes = "Un cliente puede tener varias direcciones de residencia.")
@@ -114,6 +119,7 @@ public class ClientController {
         }
     }
 
+    @PreAuthorize("hasRole('admin') OR hasRole('accountManager')")
     @GetMapping("/findClientByBalance/{balance}")
     @ApiOperation(value = "Busqueda de clientes por balance de cuentas mayor o igual al balance solicitado",
             notes = "El balance de un cliente, dependerá del balance de todas sus cuentas.")
@@ -129,6 +135,7 @@ public class ClientController {
         }
     }
 
+    @PreAuthorize("hasRole('admin') OR hasRole('accountManager')")
     @GetMapping("/findClientByType/{type}")
     @ApiOperation(value = "Busqueda de clientes por tipo de persona",
             notes = "Los clientes pueden ser persona tipo natural o juridico")
@@ -144,6 +151,7 @@ public class ClientController {
         }
     }
 
+    @PreAuthorize("hasRole('admin') OR hasRole('accountManager')")
     @PostMapping("/create")
     @ApiOperation(value = "Crea un cliente",
             notes = "Crea un cliente del Banco. "
@@ -161,6 +169,7 @@ public class ClientController {
         }
     }
 
+    @PreAuthorize("hasRole('admin') OR hasRole('accountManager')")
     @PutMapping("/update")
     @ApiOperation(value = "Actualiza campos de un cliente", notes = "Actualiza campos permitidos de un cliente.")
     @ApiResponses(value = {
