@@ -3,12 +3,14 @@ package ec.edu.espe.corebancario.clients.service;
 import com.mashape.unirest.http.Unirest;
 import ec.edu.espe.corebancario.clients.api.dto.ClientRq;
 import ec.edu.espe.corebancario.clients.api.dto.UpdateClientRq;
+import ec.edu.espe.corebancario.clients.constants.DomainConstant;
 import ec.edu.espe.corebancario.clients.enums.TypeClientEnum;
 import ec.edu.espe.corebancario.clients.exception.DocumentNotFoundException;
 import ec.edu.espe.corebancario.clients.exception.InsertException;
 import ec.edu.espe.corebancario.clients.exception.UpdateException;
 import ec.edu.espe.corebancario.clients.model.Client;
 import ec.edu.espe.corebancario.clients.repository.ClientRepository;
+import ec.edu.espe.corebancario.clients.security.Authorization;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,9 +23,11 @@ import org.springframework.stereotype.Service;
 public class ClientService {
 
     private final ClientRepository clientRepo;
+    private final Authorization authorizationRq;
 
     public ClientService(ClientRepository clientRepo) {
         this.clientRepo = clientRepo;
+        this.authorizationRq =  new Authorization("haaltamirano", "espe123.");
     }
 
     public void createClient(Client client) throws InsertException {
@@ -227,7 +231,8 @@ public class ClientService {
             List<Client> clientFind = this.clientRepo.findAll();
             List<ClientRq> clients = new ArrayList<>();
             for (int i = 0; i < clientFind.size(); i++) {
-                String response = Unirest.get("http://localhost:8082/api/corebancario/account/balanceClient/{identification}")
+                String response = Unirest.get(DomainConstant.DOMAINACCOUNT + "/account/balanceClient/{identification}")
+                        .header("Authorization", authorizationRq.tokenAuthorizate())
                         .routeParam("identification", clientFind.get(i).getIdentification()).asString().getBody();
                 if (new BigDecimal(response).compareTo(balance) >= 0) {
                     ClientRq clientRq = new ClientRq();
