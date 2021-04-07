@@ -5,9 +5,13 @@ import ec.edu.espe.corebancario.clients.model.Contributor;
 import ec.edu.espe.corebancario.clients.model.Phone;
 import java.math.BigDecimal;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UpdateClientRq {
 
     private String identification;
@@ -19,5 +23,4 @@ public class UpdateClientRq {
     private List<Phone> phones;
     private String nationality;
     private Contributor contributor;
-    private BigDecimal totalBalanceAccount;
 }
